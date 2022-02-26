@@ -1,6 +1,5 @@
 export default class NotificationMessage {
-    static isVisible = false;
-    static timer = false;
+    static isVisible; timer; activeNotification;
     constructor(text = "", {duration = 0, type = ""} = {}) {
       this.text = text;
       this.duration = duration;
@@ -8,7 +7,6 @@ export default class NotificationMessage {
 
       this.render();
     }
-
 
     get template() {
       return `
@@ -23,31 +21,20 @@ export default class NotificationMessage {
         </div>
     `;
     }
-    deleteNotification() {
-      document.querySelector('.notification').remove();
-      NotificationMessage.isVisible = false;
-    }
-    
 
-    notificationСуcle() {
-      document.body.append(this.element);
-      NotificationMessage.isVisible = true;
-      NotificationMessage.timer = setTimeout(() => {
-        this.deleteNotification();
-      }, this.duration);
-    }
-
-
-    show() {
-      if (!NotificationMessage.isVisible) {
-        this.notificationСуcle();
-        return;
+    show(parent = document.body) {
+      if (NotificationMessage.activeNotification) {
+        NotificationMessage.activeNotification.remove();
       }
-      clearTimeout(NotificationMessage.timer);
-      this.deleteNotification();
-      this.notificationСуcle();
+      parent.append(this.element);
+      NotificationMessage.timer = setTimeout(() => {
+        this.remove();
+      }, this.duration);
+      NotificationMessage.activeNotification = this;
     }
+
     remove () {
+      clearTimeout(NotificationMessage.timer);
       if (this.element) {
         this.element.remove();
       }
@@ -56,6 +43,7 @@ export default class NotificationMessage {
     destroy() {
       this.remove();
       this.element = null;
+      NotificationMessage.activeNotification = null;
     }
 
     render() {
