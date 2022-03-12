@@ -35,9 +35,7 @@ export default class ColumnChart {
           ${this.getLink()}
         </div>
         <div class="column-chart__container">
-          <div data-element="header" class="column-chart__header">
-              ${this.value}
-          </div>
+          <div data-element="header" class="column-chart__header"></div>
           <div data-element="body" class="column-chart__chart">
             ${this.getColumnBody()}
           </div>
@@ -109,7 +107,6 @@ export default class ColumnChart {
 
     if (this.data.length) {
       this.element.classList.remove('column-chart_loading');
-      this.value = this.formatHeading(this.data.length);
     }
     
     this.subElements.body.innerHTML = this.getColumnBody(newData);
